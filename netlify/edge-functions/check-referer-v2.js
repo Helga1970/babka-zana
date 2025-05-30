@@ -1,30 +1,38 @@
+// netlify/edge-functions/check-referer-v2.js
+
 export default async (request, context) => {
   const referer = request.headers.get('referer');
   const requestUrl = request.url;
+
   console.log('Incoming request URL:', requestUrl);
   console.log('Referer header:', referer);
+
   // Разрешённые домены
   const allowedReferers = [
-    // Основной сайт pro-culinaria.ru
     'https://pro-culinaria.ru',
     'http://pro-culinaria.ru',
     'https://www.pro-culinaria.ru',
     'http://www.pro-culinaria.ru',
-    // Пользовательский домен для babka-zana
-    'https://babka-zana.proculinaria-book.ru',
-    'http://babka-zana.proculinaria-book.ru',
-    // Netlify-домен для babka-zana
+    'pro-culinaria.ru',
+    'www.pro-culinaria.ru',
+
     'https://babka-zana.netlify.app',
     'http://babka-zana.netlify.app',
+    'https://babka-zana.proculinaria-book.ru', // <-- ДОБАВИТЬ ЭТУ СТРОКУ
+    'http://babka-zana.proculinaria-book.ru', // <-- И ЭТУ СТРОКУ
   ];
 
   if (referer) {
     try {
       const refererUrl = new URL(referer);
       const refererOrigin = refererUrl.origin;
+
       console.log('Parsed Referer Origin:', refererOrigin);
+
       const isAllowed = allowedReferers.includes(refererOrigin);
+
       console.log('Is referer allowed?', isAllowed);
+
       if (isAllowed) {
         return context.next();
       }
@@ -34,6 +42,7 @@ export default async (request, context) => {
   } else {
     console.log('No referer header found. Blocking.');
   }
+
   console.log('Blocking request: Referer not allowed or missing.');
   return new Response('Access Denied: This page is only accessible from allowed sources.', {
     status: 403,
