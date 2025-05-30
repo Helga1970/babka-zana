@@ -1,0 +1,42 @@
+/* Отключение выделения текста */
+body {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Standard */
+}
+
+/* Отключение контекстного меню (правой кнопки мыши) */
+body {
+    -webkit-touch-callout: none; /* iOS Safari */
+}
+
+/* Отключение возможности перетаскивания изображений */
+img {
+    -webkit-user-drag: none; /* Safari */
+    -moz-user-drag: none; /* Firefox */
+    user-drag: none; /* Standard */
+}
+
+/* Стили для печати - скрываем весь контент при печати */
+@media print {
+    body * {
+        visibility: hidden !important;
+    }
+    body:after {
+        content: "Печать этой страницы запрещена.";
+        visibility: visible !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background-color: white !important;
+        color: black !important;
+        font-size: 24px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        z-index: 9999 !important;
+    }
+}
