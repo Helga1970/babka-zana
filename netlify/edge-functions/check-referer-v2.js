@@ -1,53 +1,38 @@
 // netlify/edge-functions/check-referer-v2.js
 
 export default async (request, context) => {
-  const referer = request.headers.get('referer');
-  const requestUrl = request.url;
+  // Весь оригинальный код проверки referer закомментирован для временного отключения.
+  // const referer = request.headers.get('referer');
+  // const allowedReferers = ['https://pro-culinaria.ru/', 'http://babka-zana.proculinaria-book.ru', 'https://babka-zana.proculinaria-book.ru'];
+  // const url = new URL(request.url);
 
-  console.log('Incoming request URL:', requestUrl);
-  console.log('Referer header:', referer);
+  // context.log(`[check-referer-v2] Incoming request URL: ${url.href}`);
+  // context.log(`[check-referer-v2] Referer header: ${referer}`);
 
-  // Разрешённые домены
-  const allowedReferers = [
-    'https://pro-culinaria.ru',
-    'http://pro-culinaria.ru',
-    'https://www.pro-culinaria.ru',
-    'http://www.pro-culinaria.ru',
-    'pro-culinaria.ru',
-    'www.pro-culinaria.ru',
+  // if (referer) {
+  //   try {
+  //     const refererUrl = new URL(referer);
+  //     const refererOrigin = refererUrl.origin;
+  //     context.log(`[check-referer-v2] Parsed Referer Origin: ${refererOrigin}`);
 
-    'https://babka-zana.netlify.app',
-    'http://babka-zana.netlify.app',
-    'https://babka-zana.proculinaria-book.ru', // <-- ДОБАВИТЬ ЭТУ СТРОКУ
-    'http://babka-zana.proculinaria-book.ru', // <-- И ЭТУ СТРОКУ
-  ];
+  //     const isAllowed = allowedReferers.some(allowed => refererOrigin === new URL(allowed).origin);
+  //     context.log(`[check-referer-v2] Is referer allowed? ${isAllowed}`);
 
-  if (referer) {
-    try {
-      const refererUrl = new URL(referer);
-      const refererOrigin = refererUrl.origin;
+  //     if (!isAllowed) {
+  //       context.log(`[check-referer-v2] Blocking request: Referer not allowed.`);
+  //       return new Response('Access denied: Referer not allowed.', { status: 403 });
+  //     }
+  //   } catch (e) {
+  //     context.log(`[check-referer-v2] Error parsing referer: ${e.message}`);
+  //     context.log(`[check-referer-v2] Blocking request: Malformed referer.`);
+  //     return new Response('Access denied: Malformed referer.', { status: 403 });
+  //   }
+  // } else {
+  //   context.log(`[check-referer-v2] No referer header found. Blocking.`);
+  //   return new Response('Access denied: Referer not allowed or missing.', { status: 403 });
+  // }
 
-      console.log('Parsed Referer Origin:', refererOrigin);
-
-      const isAllowed = allowedReferers.includes(refererOrigin);
-
-      console.log('Is referer allowed?', isAllowed);
-
-      if (isAllowed) {
-        return context.next();
-      }
-    } catch (e) {
-      console.error("Invalid referer URL or parsing error:", referer, e);
-    }
-  } else {
-    console.log('No referer header found. Blocking.');
-  }
-
-  console.log('Blocking request: Referer not allowed or missing.');
-  return new Response('Access Denied: This page is only accessible from allowed sources.', {
-    status: 403,
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-    },
-  });
+  // Эта строка позволяет любому запросу пройти дальше
+  context.log(`[check-referer-v2] Проверка Referer временно отключена.`);
+  return context.next(); // Разрешаем запрос
 };
