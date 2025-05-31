@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 # --- Настройки ---
 INPUT_HTML_FILE = 'index.html'  # Имя вашего текущего HTML-файла с встроенными картинками
 OUTPUT_HTML_FILE = 'index_processed.html' # Имя нового HTML-файла с внешними ссылками
-IMAGES_DIR = 'images'          # Папка, куда будут сохраняться извлеченные изображения
+IMAGES_DIR = 'images'           # Папка, куда будут сохраняться извлеченные изображения
 
 def extract_and_replace_base64_images(input_html_path, output_html_path, images_output_dir):
     # Создаем папку для изображений, если ее нет
@@ -24,6 +24,25 @@ def extract_and_replace_base64_images(input_html_path, output_html_path, images_
         return
 
     soup = BeautifulSoup(html_content, 'html.parser')
+
+    # --- Добавляем ссылку на CSS-файл защиты во все <head> теги ---
+    link_tag = soup.new_tag("link", rel="stylesheet", href="css/style.css")
+    head_tags = soup.find_all('head')
+    for head in head_tags:
+        # Проверяем, чтобы не добавить ссылку, если она уже есть
+        # Это также помогает избежать ошибок, если soup.new_tag() создает "новый" объект
+        # даже если содержимое идентично. Проверяем по атрибутам.
+        found_existing = False
+        for content in head.contents:
+            if hasattr(content, 'name') and content.name == 'link' and \
+               content.get('rel') == ['stylesheet'] and content.get('href') == 'css/style.css':
+                found_existing = True
+                break
+        if not found_existing:
+            head.append(link_tag)
+            print(f"Добавлена ссылка на css/style.css в тег <head>.")
+    # --- Конец блока добавления CSS-ссылки ---
+
     img_tags = soup.find_all('img')
 
     extracted_count = 0
