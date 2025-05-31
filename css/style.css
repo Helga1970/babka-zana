@@ -1,12 +1,18 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Babka Zana</title>
-    <link rel="stylesheet" href="css/style.css"> <-- Эту строку мы добавляем
-</head>
-<body>
+body {
+    user-select: none; /* Отключает выделение текста */
+    -webkit-user-select: none; /* Для старых версий WebKit/Safari */
+    -moz-user-select: none; /* Для Firefox */
+    -ms-user-select: none; /* Для Internet Explorer/Edge */
+}
 
-    </body>
-</html>
+/* Отключает возможность правой кнопки мыши и печати */
+/* Это может быть более агрессивным и блокировать другие взаимодействия */
+html, body {
+    pointer-events: none; /* Отключает события мыши и касаний */
+}
+
+/* Если хотите разрешить прокрутку, но запретить выделение и правый клик */
+body {
+    -webkit-touch-callout: none; /* Отключает всплывающее меню при долгом нажатии на iOS */
+    -webkit-user-drag: none; /* Отключает перетаскивание элементов */
+}
